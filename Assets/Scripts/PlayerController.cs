@@ -27,4 +27,25 @@ public class PlayerController : MonoBehaviour
 
         transform.position = new(positionX, positionY, 0);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag(Tags.Hunter))
+        {
+            Debug.Log($"{gameObject.name} hit by Hunter: {other.name}, should decrease life");
+            // decrease life
+        }
+        else if (other.CompareTag(Tags.Person))
+        {
+            Debug.Log($"{gameObject.name} hit by Person: {other.name}, should increase points");
+            Destroy(other.gameObject);
+            // increase points
+        }
+        else if (other.CompareTag(Tags.Weapon))
+        {
+            Debug.Log($"{gameObject.name} hit by Weapon: {other.name}, should decrease life");
+            Destroy(other.gameObject);
+            //decrease life
+        }
+    }
 }

@@ -481,6 +481,54 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
+--- !u!1 &592587900
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 592587902}
+  - component: {fileID: 592587901}
+  m_Layer: 0
+  m_Name: SpawnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &592587901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592587900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cbe1970c07043b49ba7728b4901d2c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hunterGround: {fileID: 8668018940362899565, guid: ffeff52bbcc20cf489d8fa12fb24538f, type: 3}
+  hunterSky: {fileID: 4564513306394073004, guid: 4f84802cef7b2fd46a2020b4a79e0a5d, type: 3}
+  personGround: {fileID: 4988137735717174338, guid: ea802ebf7ebfb3046942262d0421d542, type: 3}
+  personSky: {fileID: 997407105812601533, guid: 3a867b66fe9b3864abba33b08186a40a, type: 3}
+--- !u!4 &592587902
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592587900}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9, y: -8, z: -0.000000059604645}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,3 +724,4 @@ SceneRoots:
   - {fileID: 545840506}
   - {fileID: 587879330}
   - {fileID: 291874647}
+  - {fileID: 592587902}

@@ -1,11 +1,20 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public Camera mainCamera;
+    public GameObject fireballPreFab;
 
     private const float xBound = 24.5f;
     private const float yBound = 14.5f;
+    private const byte shotAddDelay = 10;
+    private byte shotsAvailable = 3;
+    private Coroutine shotTImerCoroutine;
+
+    private void Start()
+    {
+        shotTImerCoroutine = StartCoroutine(ShotTimer());
+    }
 
     // Update is called once per frame
     void Update()
@@ -13,9 +22,30 @@ public class PlayerController : MonoBehaviour
         MovePlayerWithMouse();
     }
 
+    private void OnMouseDown()
+    {
+        if (shotsAvailable > 0)
+        {
+            shotsAvailable--;
+            Instantiate(fireballPreFab, transform.position, fireballPreFab.transform.rotation);
+        }
+    }
+
+    private IEnumerator ShotTimer()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(shotAddDelay);
+            if (shotsAvailable < 3) 
+            {
+                shotsAvailable++;
+            }
+        }
+    }
+
     private void MovePlayerWithMouse()
     {
-        var mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         var positionX = mousePosition.x;
         var positionY = mousePosition.y;
 

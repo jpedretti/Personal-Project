@@ -453,7 +453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b86ad68b6fb1a43bd877808c4a91e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 963194227}
+  fireballPreFab: {fileID: 3347250728560466636, guid: ef532e5f6a90edb41a193969f7c2a278, type: 3}
 --- !u!54 &587879332
 Rigidbody:
   m_ObjectHideFlags: 0

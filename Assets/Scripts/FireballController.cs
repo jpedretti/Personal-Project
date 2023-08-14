@@ -5,13 +5,8 @@ using UnityEngine;
 public class FireballController : MonoBehaviour
 {
 
+    [SerializeField] private GameObject explosionPreFab;
     private float speedX = 10;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -21,17 +16,24 @@ public class FireballController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag(Tags.Hunter))
+        if (other.CompareTag(Tags.Hunter))
         {
             Debug.Log($"Hunter {other.name} hit by fireball: {gameObject.name}, should run fireball destroied animation");
             Destroy(other.gameObject);
             Destroy(gameObject);
+            InstantiateExplosion();
         }
         else if (other.CompareTag(Tags.Weapon))
         {
             Debug.Log($"Weapon {other.name} hit by fireball: {gameObject.name}, should run fireball destroied animation");
             Destroy(other.gameObject);
             Destroy(gameObject);
+            InstantiateExplosion();
         }
+    }
+
+    private void InstantiateExplosion()
+    {
+        Instantiate(explosionPreFab, transform.position, explosionPreFab.transform.rotation);
     }
 }

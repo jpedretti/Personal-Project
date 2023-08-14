@@ -7,27 +7,72 @@ public class PlayerController : MonoBehaviour
 
     private const float xBound = 24.5f;
     private const float yBound = 14.5f;
-    private const byte shotAddDelay = 10;
-    private byte shotsAvailable = 3;
-    private Coroutine shotTImerCoroutine;
+    private const int shotAddDelay = 5;
+    private const int maxShots = 3;
+    private const int maxLives = 5;
+    private int shotsAvailable;
+    private Coroutine shotTimerCoroutine;
+    private Animator dragonAnimator;
+    private Rigidbody playerRb;
+    private bool canShoot = true;
+    private int lives;
+    private readonly Vector3 fireballOffset = new(2.2f, 3.6f, 0);
+    private const float playerYOffset = -4;
+    private CapsuleCollider dragonCollider;
+    private readonly Vector3 deadColliderPosition = new(0, 1, 0);
+    private readonly Vector3 FlyingColliderPosition = new(0, 4, 0);
+    private readonly Vector3 HitColliderPosition = new(0, 0, 0);
+
+    private bool isAlive { get { return lives > 0; } }
 
     private void Start()
     {
-        shotTImerCoroutine = StartCoroutine(ShotTimer());
+        shotsAvailable = maxShots;
+        lives = maxLives;
+        shotTimerCoroutine = StartCoroutine(ShotTimer());
+        dragonAnimator = GetComponentInChildren<Animator>();
+        playerRb = GetComponent<Rigidbody>();
+        dragonCollider = GetComponent<CapsuleCollider>();
+        dragonCollider.center = FlyingColliderPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
-        MovePlayerWithMouse();
+        if (isAlive)
+        {
+            MovePlayerWithMouse();
+        }
+        else
+        {
+            playerRb.useGravity = true;
+        }
     }
 
     private void OnMouseDown()
     {
-        if (shotsAvailable > 0)
+        if (canShoot && shotsAvailable > 0)
         {
-            shotsAvailable--;
-            Instantiate(fireballPreFab, transform.position, fireballPreFab.transform.rotation);
+            canShoot = false;
+            dragonAnimator.SetTrigger(AnimatorsParameters.fireTrigger);
+        }
+    }
+
+    public void InstantiateFireBall()
+    {
+        shotsAvailable--;
+        Instantiate(fireballPreFab, transform.position += fireballOffset, fireballPreFab.transform.rotation);
+        Debug.Log($"shots available: {shotsAvailable}");
+    }
+
+    public void FireFinished() => canShoot = true;
+
+    public void HitFinished()
+    {
+        if (isAlive)
+        {
+            canShoot = true;
+            dragonCollider.center = FlyingColliderPosition;
         }
     }
 
@@ -36,9 +81,10 @@ public class PlayerController : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(shotAddDelay);
-            if (shotsAvailable < 3) 
+            if (shotsAvailable < maxShots)
             {
                 shotsAvailable++;
+                Debug.Log($"shots available: {shotsAvailable}");
             }
         }
     }
@@ -55,27 +101,41 @@ public class PlayerController : MonoBehaviour
         if (mousePosition.y < -yBound + 1) { positionY = -yBound + 1; }
         else if (mousePosition.y > yBound) { positionY = yBound; }
 
-        transform.position = new(positionX, positionY, 0);
+        transform.position = new(positionX, positionY + playerYOffset, 0);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag(Tags.Hunter))
+        if (other.CompareTag(Tags.Hunter))
         {
-            Debug.Log($"{gameObject.name} hit by Hunter: {other.name}, should decrease life");
-            // decrease life
+            OnHitEnemy(other);
         }
         else if (other.CompareTag(Tags.Person))
         {
-            Debug.Log($"{gameObject.name} hit by Person: {other.name}, should increase points");
             Destroy(other.gameObject);
             // increase points
         }
         else if (other.CompareTag(Tags.Weapon))
         {
-            Debug.Log($"{gameObject.name} hit by Weapon: {other.name}, should decrease life");
+            OnHitEnemy(other);
             Destroy(other.gameObject);
-            //decrease life
         }
     }
+
+    private void OnHitEnemy(Collider other)
+    {
+        DecreaseLife(1);
+        if (isAlive)
+        {
+            dragonAnimator.SetTrigger(AnimatorsParameters.hitTrigger);
+            dragonCollider.center = HitColliderPosition;
+        }
+        else
+        {
+            dragonAnimator.SetBool(AnimatorsParameters.deadBool, true);
+            dragonCollider.center = deadColliderPosition;
+        }
+    }
+
+    private void DecreaseLife(int livesToDecrease) => lives -= livesToDecrease;
 }

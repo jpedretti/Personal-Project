@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FireballController : MonoBehaviour
 {
 
     [SerializeField] private GameObject explosionPreFab;
-    private float speedX = 10;
+    private const float speedX = 15;
 
     // Update is called once per frame
     void Update()

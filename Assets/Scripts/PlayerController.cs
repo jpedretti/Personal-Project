@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public GameObject fireballPreFab;
+    [SerializeField] private GameObject fireballPreFab;
 
     private const float xBound = 24.5f;
     private const float yBound = 14.5f;
-    private const int shotAddDelay = 5;
+    private const int shotAddDelay = 3;
     private const int maxShots = 3;
     private const int maxLives = 5;
     private int shotsAvailable;
@@ -16,12 +16,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody playerRb;
     private bool canShoot = true;
     private int lives;
-    private readonly Vector3 fireballOffset = new(2.2f, 3.6f, 0);
-    private const float playerYOffset = -4;
-    private CapsuleCollider dragonCollider;
-    private readonly Vector3 deadColliderPosition = new(0, 1, 0);
-    private readonly Vector3 FlyingColliderPosition = new(0, 4, 0);
-    private readonly Vector3 HitColliderPosition = new(0, 0, 0);
+    private readonly Vector3 fireballOffset = new(2.2f, 0.0f, 0);
 
     private bool isAlive { get { return lives > 0; } }
 
@@ -32,8 +27,6 @@ public class PlayerController : MonoBehaviour
         shotTimerCoroutine = StartCoroutine(ShotTimer());
         dragonAnimator = GetComponentInChildren<Animator>();
         playerRb = GetComponent<Rigidbody>();
-        dragonCollider = GetComponent<CapsuleCollider>();
-        dragonCollider.center = FlyingColliderPosition;
     }
 
     // Update is called once per frame
@@ -72,7 +65,6 @@ public class PlayerController : MonoBehaviour
         if (isAlive)
         {
             canShoot = true;
-            dragonCollider.center = FlyingColliderPosition;
         }
     }
 
@@ -101,7 +93,7 @@ public class PlayerController : MonoBehaviour
         if (mousePosition.y < -yBound + 1) { positionY = -yBound + 1; }
         else if (mousePosition.y > yBound) { positionY = yBound; }
 
-        transform.position = new(positionX, positionY + playerYOffset, 0);
+        transform.position = new(positionX, positionY, 0);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -128,12 +120,10 @@ public class PlayerController : MonoBehaviour
         if (isAlive)
         {
             dragonAnimator.SetTrigger(AnimatorsParameters.hitTrigger);
-            dragonCollider.center = HitColliderPosition;
         }
         else
         {
             dragonAnimator.SetBool(AnimatorsParameters.deadBool, true);
-            dragonCollider.center = deadColliderPosition;
         }
     }
 

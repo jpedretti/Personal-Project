@@ -11,7 +11,7 @@ public class SpawnManager : MonoBehaviour
     private const float hunterSpawnInterval = 3;
     private const float personSpawnInterval = 2;
     private const float spawnPositionX = 26;
-    private readonly Vector3 groundSpawnPosition = new(spawnPositionX, -13.5f, 0);
+    private readonly Vector3 groundSpawnPosition = new(spawnPositionX, -12.1f, 0);
     private const float skySpawnPositionMaxY = 14.5f;
     private const float skySpawnPositionMinY = -11f;
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class HunterController : MonoBehaviour
@@ -11,6 +12,7 @@ public class HunterController : MonoBehaviour
     [SerializeField] private float meleeSpeed = 1.5f;
     private Animator animator;
     private readonly List<bool> bools = new() { true, false };
+    private Transform hunterAssetTransform;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +22,7 @@ public class HunterController : MonoBehaviour
         animator.SetFloat(AnimatorsParameters.throwSpeedFloat, throwSpeed);
         animator.SetFloat(AnimatorsParameters.meleeSpeedFloat, meleeSpeed);
         animator.SetBool(AnimatorsParameters.ThrowBool, bools[Random.Range(0, bools.Count)]);
+        hunterAssetTransform = gameObject.GetComponentsInChildren<Transform>()[1];
     }
 
     private void Update()
@@ -29,19 +32,22 @@ public class HunterController : MonoBehaviour
 
     private void SpawnWeapon()
     {
-        GameObject weaponInstance;
-        if (Random.Range(0, 2) == 0)
+        if (!gameObject.IsDestroyed())
         {
-            weaponInstance = Instantiate(weapon1PreFab, transform.position, weapon1PreFab.transform.rotation);
-        }
-        else
-        {
-            weaponInstance = Instantiate(weapon2PreFab, transform.position, weapon2PreFab.transform.rotation);
-        }
+            GameObject weaponInstance;
+            if (Random.Range(0, 2) == 0)
+            {
+                weaponInstance = Instantiate(weapon1PreFab, transform.position, weapon1PreFab.transform.rotation);
+            }
+            else
+            {
+                weaponInstance = Instantiate(weapon2PreFab, transform.position, weapon2PreFab.transform.rotation);
+            }
 
-        var playerDirection = (player.transform.position - transform.position).normalized;
-        weaponInstance.GetComponent<MoveWeapon>().SetPlayerDirection(playerDirection);
-        RotateTowardPlayer(weaponInstance);
+            var playerDirection = (player.transform.position - transform.position).normalized;
+            weaponInstance.GetComponent<MoveWeapon>().SetPlayerDirection(playerDirection);
+            RotateTowardPlayer(weaponInstance);
+        }
     }
 
     public void OnAnimationFinished() => SpawnWeapon();
@@ -59,11 +65,11 @@ public class HunterController : MonoBehaviour
     {
         if (player.transform.position.x > transform.position.x)
         {
-            transform.rotation = Quaternion.AngleAxis(180, Vector3.up);
+            hunterAssetTransform.rotation = Quaternion.AngleAxis(90, Vector3.up);
         }
         else
         {
-            transform.rotation = Quaternion.AngleAxis(0, Vector3.up);
+            hunterAssetTransform.rotation = Quaternion.AngleAxis(-90, Vector3.up);
         }
     }
 

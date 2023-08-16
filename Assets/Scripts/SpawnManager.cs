@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,13 +10,16 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject personGround;
     [SerializeField] private GameObject personSky;
     [SerializeField] private List<GameObject> clouds;
+    [SerializeField] private List<GameObject> groundBackgrounds;
 
     private const float hunterSpawnInterval = 3;
     private const float personSpawnInterval = 2;
-    private const float cloudSpawnInterval = 1;
+    private readonly List<float> groundBackgroundSpawnInterval = new() { 1.3f, 1.9f };
+    private readonly List<float> cloudSpawnInterval = new() { 0.8f, 1.5f };
     private const float spawnPositionX = 26;
     private readonly Vector3 hunterGroundSpawnPosition = new(spawnPositionX, -12.1f, 0);
     private readonly Vector3 personGroundSpawnPosition = new(spawnPositionX, -13.0f, 0);
+    private readonly Vector3 groundBackgroundSpawnPosition = new(spawnPositionX, -14.3f, 0);
     private const float skySpawnPositionMaxY = 10.5f;
     private const float skySpawnPositionMinY = -8f;
 
@@ -24,14 +28,25 @@ public class SpawnManager : MonoBehaviour
     {
         InvokeRepeating(nameof(SpawnHunter), 2, hunterSpawnInterval);
         InvokeRepeating(nameof(SpawnPerson), 2, personSpawnInterval);
-        InvokeRepeating(nameof(SpawnCloud), 0, cloudSpawnInterval);
+        StartCoroutine(SpawnCloud());
+        StartCoroutine(SpawnGroundBackground());
 
     }
 
-    private void SpawnCloud()
+    private IEnumerator SpawnGroundBackground()
+    {
+        var groundBackgroundPrefab = groundBackgrounds[Random.Range(0, groundBackgrounds.Count)];
+        Instantiate(groundBackgroundPrefab, groundBackgroundSpawnPosition, groundBackgroundPrefab.transform.rotation);
+        yield return new WaitForSeconds(cloudSpawnInterval[Random.Range(0, groundBackgroundSpawnInterval.Count)]);
+        StartCoroutine(SpawnGroundBackground());
+    }
+
+    private IEnumerator SpawnCloud()
     {
         var cloudPrefab = clouds[Random.Range(0, clouds.Count)];
         Instantiate(cloudPrefab, GetRandomSkySpawnPosition(), cloudPrefab.transform.rotation);
+        yield return new WaitForSeconds(cloudSpawnInterval[Random.Range(0, cloudSpawnInterval.Count)]);
+        StartCoroutine(SpawnCloud());
     }
 
     private void SpawnHunter()

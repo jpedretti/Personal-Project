@@ -44,7 +44,7 @@ public class SpawnManager : MonoBehaviour
     private IEnumerator SpawnCloud()
     {
         var cloudPrefab = clouds[Random.Range(0, clouds.Count)];
-        Instantiate(cloudPrefab, GetRandomSkySpawnPosition(), cloudPrefab.transform.rotation);
+        Instantiate(cloudPrefab, GetRandomSkySpawnPosition(z: 2), cloudPrefab.transform.rotation);
         yield return new WaitForSeconds(cloudSpawnInterval[Random.Range(0, cloudSpawnInterval.Count)]);
         StartCoroutine(SpawnCloud());
     }
@@ -71,8 +71,8 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    private Vector3 GetRandomSkySpawnPosition()
+    private Vector3 GetRandomSkySpawnPosition(float z = 0)
     {
-        return new Vector3(spawnPositionX, Random.Range(skySpawnPositionMaxY, skySpawnPositionMinY), 0);
+        return new Vector3(spawnPositionX, Random.Range(skySpawnPositionMaxY, skySpawnPositionMinY), z);
     }
 }

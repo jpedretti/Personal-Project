@@ -1,15 +1,18 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
 
-    public GameObject hunterGround;
-    public GameObject hunterSky;
-    public GameObject personGround;
-    public GameObject personSky;
+    [SerializeField] private GameObject hunterGround;
+    [SerializeField] private GameObject hunterSky;
+    [SerializeField] private GameObject personGround;
+    [SerializeField] private GameObject personSky;
+    [SerializeField] private List<GameObject> clouds;
 
     private const float hunterSpawnInterval = 3;
     private const float personSpawnInterval = 2;
+    private const float cloudSpawnInterval = 1;
     private const float spawnPositionX = 26;
     private readonly Vector3 hunterGroundSpawnPosition = new(spawnPositionX, -12.1f, 0);
     private readonly Vector3 personGroundSpawnPosition = new(spawnPositionX, -13.0f, 0);
@@ -21,6 +24,14 @@ public class SpawnManager : MonoBehaviour
     {
         InvokeRepeating(nameof(SpawnHunter), 2, hunterSpawnInterval);
         InvokeRepeating(nameof(SpawnPerson), 2, personSpawnInterval);
+        InvokeRepeating(nameof(SpawnCloud), 0, cloudSpawnInterval);
+
+    }
+
+    private void SpawnCloud()
+    {
+        var cloudPrefab = clouds[Random.Range(0, clouds.Count)];
+        Instantiate(cloudPrefab, GetRandomSkySpawnPosition(), cloudPrefab.transform.rotation);
     }
 
     private void SpawnHunter()

@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody playerRb;
     private bool canShoot = true;
     private int lives;
-    private readonly Vector3 fireballOffset = new(2.2f, 0.0f, 0);
+    private readonly Vector3 fireballOffset = new(2.2f, -0.5f, 0);
 
     private bool isAlive { get { return lives > 0; } }
 

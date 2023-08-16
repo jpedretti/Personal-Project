@@ -16,14 +16,12 @@ public class FireballController : MonoBehaviour
     {
         if (other.CompareTag(Tags.Hunter))
         {
-            Debug.Log($"Hunter {other.name} hit by fireball: {gameObject.name}, should run fireball destroied animation");
             Destroy(other.gameObject);
             Destroy(gameObject);
             InstantiateExplosion();
         }
         else if (other.CompareTag(Tags.Weapon))
         {
-            Debug.Log($"Weapon {other.name} hit by fireball: {gameObject.name}, should run fireball destroied animation");
             Destroy(other.gameObject);
             Destroy(gameObject);
             InstantiateExplosion();
